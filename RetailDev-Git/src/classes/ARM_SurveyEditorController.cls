@@ -217,8 +217,11 @@ global without sharing class ARM_SurveyEditorController {
         if(String.isBlank(id)){
             throw new CustomException('Need a valid survey ID.');
         }
+        // Make sure we can access the database before even trying
+        if (!Schema.sObjectType.ARM_Survey__c.isAccessible()) {
+            throw new CustomException('You do not have required access.');
+        }
         try{
-
             //mapping response
               //     id:                 'a4dK00000000JBX'                     Salesforce ID
               //     surveyId:           'a2dK00000000JBW'                     DMS Survey
@@ -326,7 +329,10 @@ global without sharing class ARM_SurveyEditorController {
         if(question == null){
             throw new CustomException(prepareJsonResponse('Need a valid question object.', true, null ));
         }
-
+		// Make sure we can access the database before even trying
+        if (!Schema.sObjectType.ARM_Question__c.isAccessible()) {
+            throw new CustomException(prepareJsonResponse('You do not have required access.', true, null ));
+        }
         try{
             ARM_Question__c sq = question.getSObject();
 

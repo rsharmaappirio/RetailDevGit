@@ -47,7 +47,7 @@ public with sharing class ARM_IdentityController {
     
     @AuraEnabled
     public static String getOfficeLocation() {
-        // Make sure we can update the database before even trying
+        // Make sure we can access the database before even trying
         if (!Schema.sObjectType.User.fields.ARM_physicalDeliveryOfficeName__c.isAccessible()) {
             return '';
         }
@@ -66,12 +66,15 @@ public with sharing class ARM_IdentityController {
     public static ARM_Retail_Function__c getFranchiseInfo() {
         String officeLocation = getOfficeLocation();
         /*  Retrieve franchise title */
-        ARM_Retail_Function__c rF =  [SELECT Franchise_title__c ,
+        List<ARM_Retail_Function__c> rFList =  [SELECT Franchise_title__c ,
                                              Display_Franchise_title__c  
                                       FROM ARM_Retail_Function__c  
                                       WHERE Name = :officeLocation
                                       LIMIT 1];
-
-        return rF;
+        if(!rFList.isEmpty()){
+          return rFList[0];
+        }
+        
+        return new ARM_Retail_Function__c();
     }
 }

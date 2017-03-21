@@ -21,6 +21,13 @@ public with sharing class ARM_TemplateController {
     @AuraEnabled 
    public static List<ARM_Navigation_Item__c> getNavigationList() {
         String officeLocation = getOfficeLocation();
+        
+        // Make sure we can access the database before even trying
+        if (!Schema.sObjectType.ARM_Navigation_Item__c.isAccessible()) {
+            return new List<ARM_Navigation_Item__c>();
+        }
+        
+        
         return [SELECT Id, Display_Name__c, 
                   Page_URL__c, Order__c, 
                 (SELECT Id 
@@ -36,6 +43,12 @@ public with sharing class ARM_TemplateController {
    public static List<ARM_Sub_Navigation_Item__c> getSubNavigationList(String navigationId) {
        System.debug('navigationId::::' + navigationId);
        if(!String.isBlank(navigationId)){
+       	
+       	  // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.ARM_Sub_Navigation_Item__c.isAccessible()) {
+	         return new List<ARM_Sub_Navigation_Item__c>();
+	      }
+       	
           return [SELECT Id, Display_Name__c, 
                   Page_URL__c, Order__c, 
                    (SELECT Id 
@@ -53,6 +66,13 @@ public with sharing class ARM_TemplateController {
    public static List<ARM_Navigation_Item__c> getCurrentNavigationItemId(String pageURL) {
        
        String officeLocation = getOfficeLocation();
+       
+      // Make sure we can access the database before even trying
+      if (!Schema.sObjectType.ARM_Navigation_Item__c.isAccessible()) {
+         return new List<ARM_Navigation_Item__c>();
+      }
+       
+       
        List<ARM_Navigation_Item__c> lst = [SELECT Id, Display_Name__c  
                   FROM ARM_Navigation_Item__c 
                   WHERE Page_URL__c = :pageURL
@@ -64,11 +84,21 @@ public with sharing class ARM_TemplateController {
     
     @AuraEnabled
     public static Integer getNumberRestaurants() {
+    	// Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.User.isAccessible()) {
+	         return 0;
+	      }
+	      
         /*  Retrieve the number of Accounts where current user is a Designated Contact contact role */
         User u = [SELECT ContactId 
                   FROM User 
                   WHERE id = :UserInfo.getUserId() 
                   LIMIT 1];
+        
+        // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.AccountContactRole.isAccessible()) {
+	         return 0;
+	      }
         
         List<AccountContactRole> AccountContactRoles = [ 
             SELECT AccountId 
@@ -81,6 +111,12 @@ public with sharing class ARM_TemplateController {
     
     @AuraEnabled
     public static String getOfficeLocation() {
+    	
+    	// Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.User.isAccessible()) {
+	         return '';
+	      }
+    	
         /*  Retrieve the Account where current user is a Designated Contact contact role */
         User u = [ SELECT ARM_physicalDeliveryOfficeName__c 
                   FROM User 
@@ -104,6 +140,11 @@ public with sharing class ARM_TemplateController {
                                                  SubNavFontColor__c = '', 
                                                  WelcomeTextColor__c = '');
         if(!String.isBlank(officeLocation)){
+            
+            // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.ARM_Retail_Function__c.isAccessible()) {
+	         return retailFunction;
+	      }
             
             List<ARM_Retail_Function__c> lst = [SELECT id , 
                   SubNavigationBackgroundColor__c, 
@@ -136,11 +177,17 @@ public with sharing class ARM_TemplateController {
         String imageUrl = '/s.gif';
         if(officeLocation != NULL){
             
+          // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.ARM_Brand_Image__c.isAccessible()) {
+	         return imageUrl;
+	      }
+            
             List<ARM_Brand_Image__c> lst = [SELECT id , (Select id from attachments)
                   FROM ARM_Brand_Image__c 
                   WHERE Is_Active__c = true
                   AND Image_Type__c = 'Logo'
                   AND Retail_Function__r.Name = : officeLocation];
+            
             if(!lst.isEmpty() && !lst[0].attachments.isEmpty()){
                imageUrl = '/servlet/servlet.FileDownload?file=' + lst[0].attachments[0].id;
             }
@@ -159,6 +206,12 @@ public with sharing class ARM_TemplateController {
         
         String imageUrl = '/s.gif';
         if(officeLocation != NULL){
+            
+            
+            // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.ARM_Brand_Image__c.isAccessible()) {
+	         return imageUrl;
+	      }
             
             List<ARM_Brand_Image__c> lst = [SELECT id , (Select id from attachments)
                   FROM ARM_Brand_Image__c 
@@ -183,11 +236,17 @@ public with sharing class ARM_TemplateController {
         String imageUrl = '/s.gif';
         if(officeLocation != NULL){
             
+            // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.ARM_Brand_Image__c.isAccessible()) {
+	         return imageUrl;
+	      }
+            
             List<ARM_Brand_Image__c> lst = [SELECT id , (Select id from attachments)
                   FROM ARM_Brand_Image__c 
                   WHERE Is_Active__c = true
                   AND Image_Type__c = 'Banner'
                   AND Retail_Function__r.Name = : officeLocation];
+                  
             if(!lst.isEmpty() && !lst[0].attachments.isEmpty()){
                imageUrl = '/servlet/servlet.FileDownload?file=' + lst[0].attachments[0].id;
                
@@ -204,6 +263,11 @@ public with sharing class ARM_TemplateController {
         
         String imageUrl = '/s.gif';
         if(officeLocation != NULL){
+            
+            // Make sure we can access the database before even trying
+	      if (!Schema.sObjectType.ARM_Brand_Image__c.isAccessible()) {
+	         return imageUrl;
+	      }
             
             List<ARM_Brand_Image__c> lst = [SELECT id , (Select id from attachments)
                   FROM ARM_Brand_Image__c 

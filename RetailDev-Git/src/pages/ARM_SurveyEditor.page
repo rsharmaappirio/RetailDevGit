@@ -121,14 +121,14 @@
                           <apex:repeat value="{!GoalTypes}" var="type"><option value="{!type}">{!type}</option></apex:repeat>
                         </select>
                       </div>
-                      <div class="brand-column">
+                      <!--<div class="brand-column">
                         <label>Brand:</label>
                         <input type="text" class="goalBrand"  />
-                      </div>
+                      </div> GG-->
                   </div>
                   <div class="row">
                       <div class="level-for-answers-column">
-                          &nbsp;
+                          <!--&nbsp; GG--> 
                       </div>
                       <div class="level-for-answers-button-column">
                             <label>Level for answers:</label>

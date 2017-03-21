@@ -215,8 +215,12 @@ a:focus {
 	top: 0;
 	left: 0;
 	z-index: 2;
-    overflow-y: auto;
+    /**overflow-y: auto;**/
 	/**z-index: 899;**/
+}
+
+.aside-menu:hover{
+    overflow-y: scroll;
 }
 	.aside-menu.open {
 		width: 290px;
