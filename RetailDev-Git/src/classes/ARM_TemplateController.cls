@@ -46,18 +46,19 @@ public with sharing class ARM_TemplateController {
        	return new List<ARM_Sub_Navigation_Item__c>();  
       }
    	  // Make sure we can access the field database before even trying
-      if (!Schema.sObjectType.ARM_Sub_Navigation_Item__c.isAccessible() || !Schema.sObjectType.ARM_Sub_Navigation_Item__c.fields.Display_Name__c.isAccessible()) {
+      if (!Schema.sObjectType.ARM_Sub_Navigation_Item__c.isAccessible() 
+      	|| !Schema.sObjectType.ARM_Sub_Navigation_Item__c.fields.Display_Name__c.isAccessible()) {
             return new List<ARM_Sub_Navigation_Item__c>();
       }
-      return [SELECT Id, Display_Name__c, 
-              Page_URL__c, Order__c, 
-               (SELECT Id 
-             FROM Attachments order by CreatedDate desc LIMIT 1) 
-              FROM ARM_Sub_Navigation_Item__c 
-              WHERE Navigation_Item__c = :navigationId
-              AND Is_Active__c = true
-              ORDER BY ORDER__c ASC];
-       
+      List<ARM_Sub_Navigation_Item__c> subNavigation = [SELECT Id, Display_Name__c, 
+											              Page_URL__c, Order__c, 
+											               (SELECT Id 
+											             FROM Attachments order by CreatedDate desc LIMIT 1) 
+											              FROM ARM_Sub_Navigation_Item__c 
+											              WHERE Navigation_Item__c = :navigationId
+											              AND Is_Active__c = true
+											              ORDER BY ORDER__c ASC];
+      return subNavigation;
    }  
    
    @AuraEnabled 

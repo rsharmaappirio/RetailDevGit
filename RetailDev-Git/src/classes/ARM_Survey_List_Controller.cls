@@ -26,16 +26,18 @@ public without sharing class ARM_Survey_List_Controller {
 	@auraEnabled
     public static List<ARM_Survey__c> getSurveys(String accId){
     	// RS : Make sure we can access the database before even trying
-        if (!Schema.sObjectType.ARM_Survey__c.isAccessible()) {
+        if (!Schema.sObjectType.ARM_Survey__c.isAccessible() || 
+        	!Schema.sObjectType.ARM_Survey__c.fields.Name.isAccessible()) {
             return new List<ARM_Survey__c>();
         }
-        return [SELECT Id, Name 
-                FROM ARM_Survey__c 
-                WHERE Active__c = true 
-                AND Start_Date__c <=: System.today() 
-                AND End_Date__c >=: System.today() 
-                AND Survey_Type_Editable__c = :SURVEY_TYPE_NON_SCAN 
-                AND TDLinx_Acct_Level_E__c =: accId];
+        List<ARM_Survey__c> armSurvey = [SELECT Id, Name 
+						                FROM ARM_Survey__c 
+						                WHERE Active__c = true 
+						                AND Start_Date__c <=: System.today() 
+						                AND End_Date__c >=: System.today() 
+						                AND Survey_Type_Editable__c = :SURVEY_TYPE_NON_SCAN 
+						                AND TDLinx_Acct_Level_E__c =: accId];
+        return armSurvey;
     } 
     
     

@@ -339,7 +339,7 @@ global without sharing class ARM_SurveyEditorController {
 	        List<ARM_Question__c> originalQuestionList = [select id,Answer_Options__c from ARM_Question__c where id =:sq.id];
 	        Boolean isOldQuestion = originalQuestionList.size()>0;
 	        // RS : Make sure we can access the database before even trying
-		    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() &&
+		    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() ||
 		    	!Schema.sObjectType.ARM_Question__c.isCreateable()) {
 		        throw new CustomException('You do not have required access.');
 		    }
@@ -371,7 +371,7 @@ global without sharing class ARM_SurveyEditorController {
                         tQuestion.Conditional_Answer_Brand__c = answerBrandMap.get(tQuestion.Conditional_Answer_Brand__c);
                     }
 					// RS : Make sure we can access the database before even trying
-				    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() &&
+				    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() ||
 				    	!Schema.sObjectType.ARM_Question__c.isCreateable()) {
 				        throw new CustomException('You do not have required access.');
 				    }
