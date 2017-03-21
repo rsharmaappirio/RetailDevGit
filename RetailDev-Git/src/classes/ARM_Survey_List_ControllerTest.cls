@@ -40,6 +40,7 @@ private class ARM_Survey_List_ControllerTest{
         insert testUser;
         
         Account a = ARM_Retail_Test_Utils.insertAccount(true);
+        system.assertNotEquals(a.Id, NULL, 'Ensure that Account record is created');
         ARM_Retail_Test_Utils.insertSurvey('Mini Survey', system.today(), system.today(), SURVEY_TYPE_NON_SCAN , a.id, true);
     }
   

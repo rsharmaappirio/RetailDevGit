@@ -60,6 +60,7 @@ private class ARM_Survey_Question_DetailControllerTest{
         insert testUser;
         
         Account a = ARM_Retail_Test_Utils.insertAccount(true);
+        system.assertNotEquals(a.Id, NULL, 'Ensure that Account record is created');
         ARM_Survey__c rF = ARM_Retail_Test_Utils.insertSurvey('Mini Survey', system.today(), system.today(), SURVEY_TYPE_NON_SCAN , a.id, true);
         ARM_Question__c parentQuestion = ARM_Retail_Test_Utils.insertSurveyQuestion(rF.Id , 'Count' , false);
         parentQuestion.Answer_Options__c = '[{"valueBrandId":"","value":"Yes","score":"0","goalScore":"0"},{"valueBrandId":"","value":"No","score":"0","goalScore":"0"}]' ;

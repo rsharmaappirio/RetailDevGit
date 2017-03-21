@@ -42,6 +42,7 @@ private class ARM_IdentityControllerTest{
     private static void createTestData(){
         Account a = ARM_Retail_Test_Utils.insertAccount(true);
         Contact c = ARM_Retail_Test_Utils.insertContact(a.id , true);
+        system.assertNotEquals(c.Id, NULL, 'Ensure that Contact record is created');
         try{
         User testUser = ARM_Retail_Test_Utils.insertUser(PROFILE_SYS_ADMIN, false);
         testUser.ARM_physicalDeliveryOfficeName__c = 'Joes Coffee' ;

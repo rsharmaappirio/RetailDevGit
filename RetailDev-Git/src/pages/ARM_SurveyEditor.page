@@ -111,26 +111,26 @@
                   </div>
                 
                 
-                  <!--div class="row">
+                  <div class="row">
                         <label style="width:12px;">
                         <input class="isGoal" type="checkbox"/>This is a goal</label>
                    </div>
                   
-                  <div class="row">
+           <div class="row">
                       <div class="type-column">
                         <label>Type:</label>
                         <select class="goalType"  disabled="disabled">
                           <apex:repeat value="{!GoalTypes}" var="type"><option value="{!type}">{!type}</option></apex:repeat>
                         </select>
                       </div>
-                      <!--<div class="brand-column">
+                      <div class="brand-column">
                         <label>Brand:</label>
                         <input type="text" class="goalBrand"  />
-                      </div> 
-                  </div>GG-->
+                      </div>
+                  </div>
                   <div class="row">
                       <div class="level-for-answers-column">
-                          <!--&nbsp; GG--> 
+                          &nbsp;
                       </div>
                       <div class="level-for-answers-button-column">
                             <label>Level for answers:</label>
@@ -145,10 +145,10 @@
                              <button class="generateAnswer" style="margin-left:10px">Generate Answers</button>
                       </div>
                   </div>
-                   <!--div class="row">
+                   <div class="row">
                       <label>Goal Name:</label>
                       <input class="goalName" type="text" disabled="disabled"/>
-                   </div>GG--> 
+                   </div>
                    
                   <div style="clear:both"></div>
                   <div class="gap"><hr class="line-style" /></div>
