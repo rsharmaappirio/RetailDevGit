@@ -72,7 +72,8 @@ public with sharing class ARM_Retail_Test_Utils /* TODO : Rename class to ARM_Te
    
     
   //insert Sub Navigation Item
-  public static ARM_Sub_Navigation_Item__c insertSubNavigationItemn(ARM_Navigation_Item__c test_NavigationItem, String displayName, String pageURL, Boolean isInsert){
+  public static ARM_Sub_Navigation_Item__c insertSubNavigationItemn(ARM_Navigation_Item__c test_NavigationItem, 
+  																	String displayName, String pageURL, Boolean isInsert){
       
     //ARM_Navigation_Item__c test_NavigationItem = insertNavigationItemn('Advocacy' , '/s/advocacy-center' , true);
     ARM_Sub_Navigation_Item__c test_SubNavigationItem = new ARM_Sub_Navigation_Item__c (Navigation_Item__c = test_NavigationItem.Id,
@@ -87,7 +88,8 @@ public with sharing class ARM_Retail_Test_Utils /* TODO : Rename class to ARM_Te
     
     
   //insert Navigation Item
-  public static ARM_Navigation_Item__c insertNavigationItemn(ARM_Retail_Function__c test_RetailFunction, String displayName, String pageURL, Boolean isInsert){
+  public static ARM_Navigation_Item__c insertNavigationItemn(ARM_Retail_Function__c test_RetailFunction, 
+  															 String displayName, String pageURL, Boolean isInsert){
       
     //ARM_Retail_Function__c test_RetailFunction = insertRetailFunction('Joes Coffee' , true);
     ARM_Navigation_Item__c test_NavigationItem = new ARM_Navigation_Item__c ( Retail_Function__c = test_RetailFunction.Id,
