@@ -1,34 +1,6 @@
 <apex:page extensions="ARM_SurveyEditorController" showHeader="true" standardStyleSheets="false" applyBodyTag="false" standardController="ARM_Survey__c" cache="false"> 
 <!--Added Cache = false attribute for DE2062 -->
-     
-     <!--  CONFIG VARIABLES -->
-    <script>
-        //the survey ID
-        _SURVEY_ID = '{!ARM_Survey__c.Id}'; 
-        //remote action to fetch all data (survey and children)
-        _CONTROLLER_GETSURVEY_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.getSurvey}';
-        //remote action to create a new question
-        _CONTROLLER_UPSERTQUESTION_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.upsertQuestion}';
-        //remote action to set the first question on the survey
-        _CONTROLLER_SETFIRSTQUESTION_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.setFirstQuestion}';
-        //remote action to remove a question
-        _CONTROLLER_REMOVEQUESTION_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.removeQuestion}';
-        //remote action to search brands by nme
-        _CONTROLLER_SEARCHBRAND_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.searchBrands}';
-        //remote action to fetch all answer brands by brand level and question brand.
-        _CONTROLLER_GETALL_ANSWER_BRAND_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.getBrands}';
-    </script>
-    <!-- TODO : load Jquery from static resource ARM_JQuery_UI -->
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Core,'/jquery-1.10.2.js')}"></script>
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Core,'/jquery.color-2.1.2.min.js')}"></script><!-- For animating colors (see $.fn.pulse()) -->
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Core,'/es5.js')}"></script> <!-- Polyfils for ES5 Array methods (e.g. map, filter) -->
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Salesforce)}"></script> <!-- CRUD methods for salesforce -->
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Questions)}"></script> <!-- questions.js -->
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_UI)}"></script> <!-- ui.js -->
-    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Data)}"></script> <!-- data.js -->
-    
-    <script src="{!URLFOR($Resource.ARM_JQuery_UI,'/js/jquery-ui-1.10.4.custom.min.js')}"></script> <!-- jquery UI -->
-    
+
     <apex:stylesheet value="{!URLFOR($Resource.ARM_SurveyEditor_CSS)}"/>
     <apex:stylesheet value="{!URLFOR($Resource.ARM_JQuery_UI,"/css/ui-lightness/jquery-ui-1.10.4.custom.min.css")}" />
     
@@ -56,7 +28,24 @@
         
     </style>
     
-   
+    <!--  CONFIG VARIABLES -->
+    <script>
+        //the survey ID
+        _SURVEY_ID = '{!ARM_Survey__c.Id}'; 
+        //remote action to fetch all data (survey and children)
+        _CONTROLLER_GETSURVEY_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.getSurvey}';
+        //remote action to create a new question
+        _CONTROLLER_UPSERTQUESTION_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.upsertQuestion}';
+        //remote action to set the first question on the survey
+        _CONTROLLER_SETFIRSTQUESTION_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.setFirstQuestion}';
+        //remote action to remove a question
+        _CONTROLLER_REMOVEQUESTION_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.removeQuestion}';
+        //remote action to search brands by nme
+        _CONTROLLER_SEARCHBRAND_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.searchBrands}';
+        //remote action to fetch all answer brands by brand level and question brand.
+        _CONTROLLER_GETALL_ANSWER_BRAND_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.getBrands}';
+       
+    </script>
         
     <body style="">
     
@@ -284,6 +273,16 @@
       </div>
 
     </div>
+    
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Core,'/jquery-1.10.2.js')}"></script>
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Core,'/jquery.color-2.1.2.min.js')}"></script><!-- For animating colors (see $.fn.pulse()) -->
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Core,'/es5.js')}"></script> <!-- Polyfils for ES5 Array methods (e.g. map, filter) -->
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Salesforce)}"></script> <!-- CRUD methods for salesforce -->
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Questions)}"></script> <!-- questions.js -->
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_UI)}"></script> <!-- ui.js -->
+    <script src="{!URLFOR($Resource.ARM_SurveyEditor_Data)}"></script> <!-- data.js -->
+    
+    <script src="{!URLFOR($Resource.ARM_JQuery_UI,'/js/jquery-ui-1.10.4.custom.min.js')}"></script> <!-- jquery UI -->
     </body>
 
 </apex:page>

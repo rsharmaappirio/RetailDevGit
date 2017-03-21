@@ -47,11 +47,18 @@ public with sharing class ARM_IdentityController {
     
     @AuraEnabled
     public static String getOfficeLocation() {
+        // Make sure we can update the database before even trying
+        if (!Schema.sObjectType.User.fields.ARM_physicalDeliveryOfficeName__c.isAccessible()) {
+            return '';
+        }
+        
         /*  Retrieve the Account where current user is a Designated Contact contact role */
         User u = [ SELECT ARM_physicalDeliveryOfficeName__c 
                   FROM User 
                   WHERE id = :UserInfo.getUserId() 
                   LIMIT 1];
+                  
+                  
         return u.ARM_physicalDeliveryOfficeName__c ;
     }
     
