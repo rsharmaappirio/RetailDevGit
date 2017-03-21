@@ -337,13 +337,16 @@ global without sharing class ARM_SurveyEditorController {
 
         List<ARM_Question__c> originalQuestionList = [select id,Answer_Options__c from ARM_Question__c where id =:sq.id];
         Boolean isOldQuestion = originalQuestionList.size()>0;
-        try{
-        	// Make sure we can access the database before even trying
-	    	if (Schema.sObjectType.ARM_Question__c.isUpdateable())
-            upsert sq;
+        // Make sure we can access the database before even trying
+	    if (!Schema.sObjectType.ARM_Question__c.isUpdateable()) {
+	        throw new CustomException(prepareJsonResponse('You do not have required access.', true, null ));
+	    }
+	    upsert sq;
+        /*try{
+            
 		} catch(DMLException e){
             throw new CustomException(prepareJsonResponse('Unexpected error: '+e.getDMLMessage(0), true, null ));
-        }
+        }*/
         try {
             if(sq.id!=null && isOldQuestion){
                 ARM_Question__c originalQuestion = originalQuestionList[0];
