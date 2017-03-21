@@ -8,12 +8,16 @@
  * 
  * Date Modified      Modified By                  Description of the update
  *  =====================================================================*/
-public class ARM_Survey_Question_Detail_Controller {
+public without sharing class ARM_Survey_Question_Detail_Controller {
     //Public static final String ENDPOINT = 'http://api.cloudinary.com/v1_1/';
     
     @auraEnabled
     public static String getQuestions(String surveyId){
         // TODO : Update method Description
+        // RS : Make sure we can access the database before even trying
+        if (!Schema.sObjectType.ARM_Survey__c.isAccessible()) {
+            return 'You do not have required access.';
+        }
         //Query the survey and its related all questions
         List<ARM_Survey__c> surveyList =  [Select Id, Name,Account__c, First_Question__c, (Select Id, Name, Answer_Options__c, Conditional_Answer__c, 
                                            Conditional_Answer_Brand__c, Survey__c, Label_for_Add_l_Comments__c, NEXT_Question__c, Parent_Question__c, 
@@ -152,6 +156,10 @@ public class ARM_Survey_Question_Detail_Controller {
                 if(answersToWrapper != null  && answersToWrapper.parentQuestions != null ){
                     ARM_Survey_Submission__c surveySubmission = new ARM_Survey_Submission__c();
                     surveySubmission.Survey__c = answersToWrapper.surveyId;
+                    // RS : Make sure we can access the database before even trying
+			        if (!Schema.sObjectType.ARM_Survey_Submission__c.isCreateable()) {
+			            return 'You do not have required access.';
+			        }
                     insert surveySubmission;
                     
                     Map<String,QuestionWrapper> questions = (Map<String,QuestionWrapper>) answersToWrapper.parentQuestions;
@@ -208,6 +216,10 @@ public class ARM_Survey_Question_Detail_Controller {
                     }
                     //insert survey results and photos
                     if(surveyResultsList.size()>0){
+                    	// RS : Make sure we can access the database before even trying
+				        if (!Schema.sObjectType.ARM_Survey_Result__c.isCreateable()) {
+				            return 'You do not have required access.';
+				        }
                         insert surveyResultsList;
                     }
                     List<ARM_Survey_Result_Photos__c> photos = new List<ARM_Survey_Result_Photos__c>();
@@ -217,8 +229,13 @@ public class ARM_Survey_Question_Detail_Controller {
                             photos.add(photoWithParent.photo);
                         }
                     } 
-                    if(photos.size()>0)
+                    if(photos.size()>0) {
+                    	// RS : Make sure we can access the database before even trying
+				        if (!Schema.sObjectType.ARM_Survey_Result_Photos__c.isCreateable()) {
+				            return 'You do not have required access.';
+				        }
                         insert photos;
+                    }
                 }
             }
             return 'SUCCESS';
@@ -287,7 +304,10 @@ public class ARM_Survey_Question_Detail_Controller {
         a.Body = EncodingUtil.base64Decode(base64Data);
         a.Name = fileName;
         a.ContentType = contentType;
-        
+        // RS : Make sure we can access the database before even trying
+		if (!Schema.sObjectType.Attachment.isCreateable()) {
+			return 'You do not have required access.';
+		}
         insert a;
         
         return a.Id;
@@ -310,7 +330,10 @@ public class ARM_Survey_Question_Detail_Controller {
     
     private static void appendToFile(Id fileId, String base64Data) {
         base64Data = EncodingUtil.urlDecode(base64Data, 'UTF-8');
-        
+        // RS : Make sure we can access the database before even trying
+		if (!Schema.sObjectType.Attachment.isAccessible()) {
+			return;
+		}
         Attachment a = [
             SELECT Id, Body
             FROM Attachment
@@ -319,7 +342,10 @@ public class ARM_Survey_Question_Detail_Controller {
         
      	String existingBody = EncodingUtil.base64Encode(a.Body);
         a.Body = EncodingUtil.base64Decode(existingBody + base64Data); 
-        
+        // RS : Make sure we can access the database before even trying
+		if (!Schema.sObjectType.Attachment.isUpdateable()) {
+			return;
+		}
         update a;
     }
     

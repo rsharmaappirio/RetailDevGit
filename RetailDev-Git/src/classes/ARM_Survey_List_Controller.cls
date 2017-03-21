@@ -13,6 +13,10 @@ public without sharing class ARM_Survey_List_Controller {
 	private static final string SURVEY_TYPE_NON_SCAN = 'Non Scan';
     @auraEnabled
     public static List<Account> getAccounts(){
+    	// RS : Make sure we can access the database before even trying
+        if (!Schema.sObjectType.Account.isAccessible()) {
+            return new List<Account>();
+        }
         List<Account> accountList = [SELECT Id, Name 
                                      FROM Account 
                                      LIMIT 999];
@@ -21,6 +25,10 @@ public without sharing class ARM_Survey_List_Controller {
     
 	@auraEnabled
     public static List<ARM_Survey__c> getSurveys(String accId){
+    	// RS : Make sure we can access the database before even trying
+        if (!Schema.sObjectType.ARM_Survey__c.isAccessible()) {
+            return new List<ARM_Survey__c>();
+        }
         return [SELECT Id, Name 
                 FROM ARM_Survey__c 
                 WHERE Active__c = true 

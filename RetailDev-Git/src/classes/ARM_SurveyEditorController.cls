@@ -217,7 +217,7 @@ global without sharing class ARM_SurveyEditorController {
         if(String.isBlank(id)){
             throw new CustomException('Need a valid survey ID.');
         }
-        // Make sure we can access the database before even trying
+        // RS : Make sure we can access the database before even trying
         if (!Schema.sObjectType.ARM_Survey__c.isAccessible()) {
             throw new CustomException('You do not have required access.');
         }
@@ -329,25 +329,21 @@ global without sharing class ARM_SurveyEditorController {
         if(question == null){
             throw new CustomException(prepareJsonResponse('Need a valid question object.', true, null ));
         }
-		// Make sure we can access the database before even trying
-        if (!Schema.sObjectType.ARM_Question__c.isAccessible()) {
-            throw new CustomException(prepareJsonResponse('You do not have required access.', true, null ));
-        }
-        ARM_Question__c sq = question.getSObject();
-
-        List<ARM_Question__c> originalQuestionList = [select id,Answer_Options__c from ARM_Question__c where id =:sq.id];
-        Boolean isOldQuestion = originalQuestionList.size()>0;
-        // Make sure we can access the database before even trying
-	    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable()) {
-	        throw new CustomException(prepareJsonResponse('You do not have required access.', true, null ));
-	    }
-	    upsert sq;
-        /*try{
-            
-		} catch(DMLException e){
-            throw new CustomException(prepareJsonResponse('Unexpected error: '+e.getDMLMessage(0), true, null ));
-        }*/
         try {
+        	// RS : Make sure we can access the database before even trying
+	        if (!Schema.sObjectType.ARM_Question__c.isAccessible()) {
+	            throw new CustomException('You do not have required access.');
+	        }
+	        ARM_Question__c sq = question.getSObject();
+	
+	        List<ARM_Question__c> originalQuestionList = [select id,Answer_Options__c from ARM_Question__c where id =:sq.id];
+	        Boolean isOldQuestion = originalQuestionList.size()>0;
+	        // RS : Make sure we can access the database before even trying
+		    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() &&
+		    	!Schema.sObjectType.ARM_Question__c.isCreateable()) {
+		        throw new CustomException('You do not have required access.');
+		    }
+		    upsert sq;
             if(sq.id!=null && isOldQuestion){
                 ARM_Question__c originalQuestion = originalQuestionList[0];
                 // Handling answer change usecase, Updating child question's conditional answer field value if someone changes answer text.
@@ -374,7 +370,11 @@ global without sharing class ARM_SurveyEditorController {
                         tQuestion.Conditional_Answer__c = answerMap.get(tQuestion.Conditional_Answer__c);
                         tQuestion.Conditional_Answer_Brand__c = answerBrandMap.get(tQuestion.Conditional_Answer_Brand__c);
                     }
-
+					// RS : Make sure we can access the database before even trying
+				    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() &&
+				    	!Schema.sObjectType.ARM_Question__c.isCreateable()) {
+				        throw new CustomException('You do not have required access.');
+				    }
                     upsert opChild;
                 }
 
@@ -384,6 +384,8 @@ global without sharing class ARM_SurveyEditorController {
             result.surveyId = question.surveyId;
         } catch(DMLException e){
             throw new CustomException(prepareJsonResponse('Unexpected error: '+e.getDMLMessage(0), true, null ));
+        } catch(CustomException e){
+            throw new CustomException(prepareJsonResponse('Unexpected error: '+e.getMessage(), true, null ));
         }
         return result;
     }
@@ -397,6 +399,10 @@ global without sharing class ARM_SurveyEditorController {
             throw new CustomException(NEED_A_VALID_QUESTION);
         }
         try{
+        	// RS : Make sure we can access the database before even trying
+	        if (!Schema.sObjectType.ARM_Question__c.isAccessible()) {
+	            throw new CustomException('You do not have required access.');
+	        }
             List<ARM_Question__c> qList = [Select Id, Survey__r.Id, Survey__r.First_Question__c From ARM_Question__c
                                             where Id = :questionID];
             if(qList.size()==0){
@@ -407,6 +413,8 @@ global without sharing class ARM_SurveyEditorController {
 
         } catch(DMLException e){
             throw new CustomException('Unexpected error: '+e.getDMLMessage(0));
+        }  catch(CustomException e){
+            throw new CustomException('Unexpected error: '+e.getMessage());
         } catch(Exception e){
             throw new CustomException('Unexpected error: '+e.getMessage());
         }
@@ -420,7 +428,7 @@ global without sharing class ARM_SurveyEditorController {
             throw new CustomException(NEED_A_VALID_QUESTION);
         }
         try{
-        	// Make sure we can access the database before even trying
+        	// RS : Make sure we can access the database before even trying
 		    if (!Schema.sObjectType.ARM_Question__c.isDeletable()) {
 		        throw new CustomException('You do not have required access.');
 		    }
@@ -446,7 +454,7 @@ global without sharing class ARM_SurveyEditorController {
     // Search brands based on term and level
     @RemoteAction
     global static List<String> searchBrands(String term, String level){
-    	// Make sure we can access the database before even trying
+    	// RS : Make sure we can access the database before even trying
         if (!Schema.sObjectType.User.isAccessible()) {
             return new List<String>();
         }
@@ -460,7 +468,7 @@ global without sharing class ARM_SurveyEditorController {
         
         string userCountry = currentUser.Default_Country__c;
         string nameQuery = '%' + queryString + '%';
-        // Make sure we can access the database before even trying
+        // RS : Make sure we can access the database before even trying
         if (!Schema.sObjectType.ARM_Brand__c.isAccessible()) {
             return new List<String>();
         }
