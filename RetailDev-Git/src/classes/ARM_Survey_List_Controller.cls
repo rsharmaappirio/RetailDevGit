@@ -9,7 +9,7 @@
  * 
  * Date Modified      Modified By                  Description of the update
  *  =====================================================================*/
-public class ARM_Survey_List_Controller {
+public with sharing class ARM_Survey_List_Controller {
 	private static final string SURVEY_TYPE_NON_SCAN = 'Non Scan';
     @auraEnabled
     public static List<Account> getAccounts(){
