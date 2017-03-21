@@ -44,11 +44,17 @@ public with sharing class ARM_TemplateController {
        System.debug('navigationId::::' + navigationId);
        if(!String.isBlank(navigationId)){
        	
-       	  // Make sure we can access the database before even trying
-	      if (!Schema.sObjectType.ARM_Sub_Navigation_Item__c.isAccessible()) {
-	         return new List<ARM_Sub_Navigation_Item__c>();
-	      }
+       	  
        	
+       	  // Make sure we can access the field database before even trying
+	      if (!Schema.sObjectType.ARM_Sub_Navigation_Item__c.isAccessible() || !Schema.sObjectType.ARM_Sub_Navigation_Item__c.fields.Display_Name__c.isAccessible()) {
+	            return new List<ARM_Sub_Navigation_Item__c>();
+	      }
+        
+          if (!Schema.sObjectType.Attachment.isAccessible()) {
+	            return new List<ARM_Sub_Navigation_Item__c>();
+	      }
+        
           return [SELECT Id, Display_Name__c, 
                   Page_URL__c, Order__c, 
                    (SELECT Id 
