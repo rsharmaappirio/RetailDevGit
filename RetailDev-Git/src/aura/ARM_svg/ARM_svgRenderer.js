@@ -18,7 +18,13 @@
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute('class', classname);
     svg.setAttribute('aria-hidden', ariaHidden);
-    svg.innerHTML = '<use xlink:href="'+xlinkhref+'"></use>';
+    var html = '<use xlink:href="{xlinkhref}"></use>'.replace('{xlinkhref}', xlinkhref);
+    
+    var use = document.createElementNS(html, "use");
+    //use.setAttribute("xlink:href", xlinkhref);
+    svg.appendChild(use);
+    
+    //svg.innerHTML = '<use xlink:href="'+xlinkhref+'"></use>';
     return svg;
   }
 })

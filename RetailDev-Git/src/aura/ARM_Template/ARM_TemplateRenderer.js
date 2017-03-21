@@ -33,7 +33,7 @@
         this.superAfterRender();
         console.log('ARM_TEMPLATE afterRender called');
         try{
-            setTimeout(function(){
+            var timeout = setTimeout(function(){
                 
                 $(window).resize(function(){
                     if($(window).width() > 1023){

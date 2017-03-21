@@ -44,6 +44,8 @@
         _CONTROLLER_SEARCHBRAND_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.searchBrands}';
         //remote action to fetch all answer brands by brand level and question brand.
         _CONTROLLER_GETALL_ANSWER_BRAND_ACTION = '{!$RemoteAction.ARM_SurveyEditorController.getBrands}';
+        
+    
        
     </script>
         
@@ -109,7 +111,7 @@
                   </div>
                 
                 
-                  <div class="row">
+                  <!--div class="row">
                         <label style="width:12px;">
                         <input class="isGoal" type="checkbox"/>This is a goal</label>
                    </div>
@@ -124,8 +126,8 @@
                       <!--<div class="brand-column">
                         <label>Brand:</label>
                         <input type="text" class="goalBrand"  />
-                      </div> GG-->
-                  </div>
+                      </div> 
+                  </div>GG-->
                   <div class="row">
                       <div class="level-for-answers-column">
                           <!--&nbsp; GG--> 
@@ -143,10 +145,10 @@
                              <button class="generateAnswer" style="margin-left:10px">Generate Answers</button>
                       </div>
                   </div>
-                   <div class="row">
+                   <!--div class="row">
                       <label>Goal Name:</label>
                       <input class="goalName" type="text" disabled="disabled"/>
-                   </div>
+                   </div>GG--> 
                    
                   <div style="clear:both"></div>
                   <div class="gap"><hr class="line-style" /></div>
@@ -283,6 +285,26 @@
     <script src="{!URLFOR($Resource.ARM_SurveyEditor_Data)}"></script> <!-- data.js -->
     
     <script src="{!URLFOR($Resource.ARM_JQuery_UI,'/js/jquery-ui-1.10.4.custom.min.js')}"></script> <!-- jquery UI -->
+    
+    <script>
+    //Code to hide the keyboard shortcut div
+         $(document).click(function() {
+             hideKeyBoardHelp();
+        });
+        $(document).on( 'keydown', function ( e ) {
+            if ( e.keyCode === 27 ) { // ESC
+                hideKeyBoardHelp();
+            }
+        });
+        
+        function hideKeyBoardHelp(){
+          if(document.getElementsByClassName('keyboard-help')[0].style.display == 'block'){
+            document.getElementsByClassName('keyboard-help')[0].style.display = 'none';
+          }
+        }
+        
+    </script>
     </body>
+    
 
 </apex:page>
