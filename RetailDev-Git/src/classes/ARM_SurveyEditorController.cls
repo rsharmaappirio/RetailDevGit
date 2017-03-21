@@ -338,8 +338,7 @@ global without sharing class ARM_SurveyEditorController {
         List<ARM_Question__c> originalQuestionList = [select id,Answer_Options__c from ARM_Question__c where id =:sq.id];
         Boolean isOldQuestion = originalQuestionList.size()>0;
         // Make sure we can access the database before even trying
-	    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable() 
-	    		&& !Schema.sObjectType.ARM_Question__c.isCreateable()) {
+	    if (!Schema.sObjectType.ARM_Question__c.fields.Answer_Options__c.isUpdateable()) {
 	        throw new CustomException(prepareJsonResponse('You do not have required access.', true, null ));
 	    }
 	    upsert sq;
@@ -421,9 +420,15 @@ global without sharing class ARM_SurveyEditorController {
             throw new CustomException(NEED_A_VALID_QUESTION);
         }
         try{
+        	// Make sure we can access the database before even trying
+		    if (!Schema.sObjectType.ARM_Question__c.isDeletable()) {
+		        throw new CustomException('You do not have required access.');
+		    }
             delete new ARM_Question__c(Id = questionID);
         } catch(DMLException e){
             throw new CustomException('Unexpected error: '+e.getDMLMessage(0));
+        } catch(CustomException e){
+            throw new CustomException('Unexpected error: '+e.getMessage());
         }
     }
 
@@ -441,6 +446,10 @@ global without sharing class ARM_SurveyEditorController {
     // Search brands based on term and level
     @RemoteAction
     global static List<String> searchBrands(String term, String level){
+    	// Make sure we can access the database before even trying
+        if (!Schema.sObjectType.User.isAccessible()) {
+            return new List<String>();
+        }
         User currentUser = [select Default_Country__c from User where id=:UserInfo.getUserId()];
         List<String> brandList = new List<String>();
         String queryString = String.escapeSingleQuotes(term);
@@ -451,6 +460,10 @@ global without sharing class ARM_SurveyEditorController {
         
         string userCountry = currentUser.Default_Country__c;
         string nameQuery = '%' + queryString + '%';
+        // Make sure we can access the database before even trying
+        if (!Schema.sObjectType.ARM_Brand__c.isAccessible()) {
+            return new List<String>();
+        }
         List<ARM_Brand__c> blst = [SELECT Id, Name, Level__c 
                                     FROM ARM_Brand__c 
                                     WHERE Level__c != :level7 AND country__c = :userCountry AND Name LIKE :nameQuery 
@@ -493,16 +506,23 @@ global without sharing class ARM_SurveyEditorController {
 
         Id questionBrandId;
         if(String.isNotBlank(questionBrand)){
-            //Case 00012303/00106632/DE2058 - DE2078- smeers - New Query starts with Level # when questionBrand is received from VF page in case of duplicate names
-            String BrandQuery = 'select id,name from ARM_Brand__c where Level__c = \''+ questionBrand.subString(0,2) +'\' ';
-
-            if(questionBrand.indexOf(': ')>-1){
+        	string level = questionBrand.subString(0,2);
+        	if(questionBrand.indexOf(': ')>-1){
                questionBrand = questionBrand.subString(questionBrand.indexOf(': ')+2);
             }
-
+             
+            //Case 00012303/00106632/DE2058 - DE2078- smeers - New Query starts with Level # when questionBrand is received from VF page in case of duplicate names
+           /* String BrandQuery = 'select id,name from ARM_Brand__c where Level__c = \''+ questionBrand.subString(0,2) +'\' ';
+			Database.query(BrandQuery + 'AND name = :questionBrand limit 1');
+            //List<Brand__c> brand = [select id,name from Brand__c where name =:questionBrand limit 1];*/
             //Case 00012303/00106632/DE2058 - smeers - Takes query from above and combines with modified questionBrand name to return result and commented out original query
-            List<ARM_Brand__c> brand = Database.query(BrandQuery + 'AND name = :questionBrand limit 1');
-            //List<Brand__c> brand = [select id,name from Brand__c where name =:questionBrand limit 1];
+            if (!Schema.sObjectType.ARM_Brand__c.isAccessible()) {
+	            return returnList;
+	        }
+            List<ARM_Brand__c> brand = [SELECT id,name 
+            							FROM ARM_Brand__c
+            							WHERE Level__c = :level AND name = :questionBrand limit 1];
+            
 
             if(brand.size()>0){
                 questionBrandId = brand[0].id;
@@ -510,7 +530,7 @@ global without sharing class ARM_SurveyEditorController {
                 throw new CustomException(prepareJsonResponse('Need a valid brand name.', true, null ));
             }
         }
-        String brandCondition = '';
+        /*String brandCondition = '';
         if(questionBrandLevel.equals(levelL1)){
             brandCondition += ' and L1_Classification__c = \'' + questionBrandId + '\'' ;
         } else if(questionBrandLevel.equals(levelL2)){
@@ -524,9 +544,13 @@ global without sharing class ARM_SurveyEditorController {
         } else if(questionBrandLevel.equals(levelL6)){
             brandCondition += ' and L6_Volume__c = \'' + questionBrandId + '\'' ;
         }
-
-        List<ARM_Brand__c> brandList = Database.query('SELECT Id, Name, Level__c FROM ARM_Brand__c WHERE Level__c =\''+ brandLevel + '\'' + brandCondition);
-        for(ARM_Brand__c br :brandList){
+		// RS : Commented after code review
+        List<ARM_Brand__c> brandList = Database.query('SELECT Id, Name, Level__c FROM ARM_Brand__c WHERE Level__c =\''+ brandLevel + '\'' + brandCondition);*/
+        if (!Schema.sObjectType.ARM_Brand__c.isAccessible()) {
+	        return returnList;
+	    }
+        List<ARM_Brand__c> brandList = [SELECT Id, Name, Level__c FROM ARM_Brand__c WHERE Level__c = :brandLevel];        
+        for(ARM_Brand__c br :brandList) {
             Answer ans = new Answer();
             ans.value = br.Level__c+': ' + br.Name ;
             ans.valueBrandId = '' + br.Id;
@@ -534,8 +558,7 @@ global without sharing class ARM_SurveyEditorController {
             ans.goalScore = ''+ goalCountValue;
             returnList.add(ans);
         }
-
-        return returnList;
+		return returnList;
     }
     
     // Prepare a JSON response in case an exception occurs. 
