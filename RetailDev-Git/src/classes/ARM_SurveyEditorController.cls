@@ -10,7 +10,7 @@
  * 
  * Date Modified      Modified By                  Description of the update
  *  =====================================================================*/
-global class ARM_SurveyEditorController {
+global without sharing class ARM_SurveyEditorController {
     
     private static final string NEED_VALID_BRAND_NAME = 'Need a valid brand name.';
     private static final string GOAL_BRAND_IS_REQUIRED = 'Goal brand is required.';
